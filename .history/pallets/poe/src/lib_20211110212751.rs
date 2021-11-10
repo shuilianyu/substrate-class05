@@ -38,7 +38,6 @@ pub mod pallet {
     pub enum Event<T: Config> {
         ClaimCreated(T::AccountId, Vec<u8>),
         ClaimRevoked(T::AccountId, Vec<u8>),
-        ClaimTransfer(T::AccountId, T::AccountId, Vec<u8>),
     }
 
     #[pallet::error]
@@ -93,7 +92,6 @@ pub mod pallet {
         #[pallet::weight(0)]
         pub fn transfer_claim(
             origin: OriginFor<T>, 
-            to: OriginFor<T>,
             claim: Vec<u8>
         ) ->  DispatchResultWithPostInfo{
             let sender = ensure_signed(origin)?;
@@ -104,16 +102,10 @@ pub mod pallet {
 
             Proofs::<T>::remove(&claim);
 
-            let to = ensure_signed(origin)?;
-
-            Proofs::<T>::insert(
-                &claim,
-                (to.clone(), frame_system::Pallet::<T>::block_number())
-            );
-
-            Self::deposit_event(Event::ClaimTransfer(sender, to, claim));
+            Self::deposit_event(Event::ClaimRevoked(sender, claim));
 
             Ok(().into())
         }
     }
+
 }

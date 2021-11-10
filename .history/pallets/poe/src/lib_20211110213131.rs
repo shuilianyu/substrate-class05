@@ -38,7 +38,6 @@ pub mod pallet {
     pub enum Event<T: Config> {
         ClaimCreated(T::AccountId, Vec<u8>),
         ClaimRevoked(T::AccountId, Vec<u8>),
-        ClaimTransfer(T::AccountId, T::AccountId, Vec<u8>),
     }
 
     #[pallet::error]
@@ -116,4 +115,5 @@ pub mod pallet {
             Ok(().into())
         }
     }
+
 }
